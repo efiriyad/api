@@ -31,11 +31,30 @@ class FireBase(BaseSettings):
         env_prefix = "FIREBASE_"
 
 
+class Config(BaseSettings):
+    """The application settings."""
+
+    timezone: str = "Asia/Riyadh"
+    day_start: str = "07:45"
+    day_end: str = "17:30"
+    lesson_duration: int = 55  # In minutes.
+
+    class Config:
+        """The Pydantic settings configuration."""
+
+        env_file = ".env"
+        env_prefix = "APP_"
+
+
 class Global(BaseSettings):
     """The app settings."""
 
     api: API = API()
     firebase: FireBase = FireBase()
+
+    # This key will be used to decrypt the user passwords stored in the
+    # users -> user -> password firestore field.
+    password_key: str
 
     debug: bool = False
 
@@ -46,3 +65,4 @@ class Global(BaseSettings):
 
 
 settings = Global()
+config = Config()

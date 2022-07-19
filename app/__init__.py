@@ -43,6 +43,8 @@ if root.handlers:
 
 # Silence irrelevant loggers.
 logging.getLogger("asyncio").setLevel(logging.ERROR)
+logging.getLogger("urllib3").setLevel(logging.ERROR)
+logging.getLogger("charset_normalizer").setLevel(logging.ERROR)
 
 # Setup new logging configuration.
 logging.basicConfig(
