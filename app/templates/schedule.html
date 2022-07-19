@@ -1,0 +1,190 @@
+{# Settings #}
+{% set hours = ["07h45", "08h45", "09h55", "10h55", "11h50", "12h45", "13h40", "14h40", "15h35", "16h35", "17h30"] %}
+{% set lines = {1: "#FFFF00", 2: "#32CD32", 5: "#32CD32"} %}
+{% set last_day = "02 juil" %}
+
+{% set months = {
+    "January": "janv.",
+    "February": "févr.",
+    "March": "mars",
+    "April": "avr.",
+    "May": "mai",
+    "June": "juin",
+    "July": "juil.",
+    "August": "août",
+    "September": "sept.",
+    "October": "oct.",
+    "November": "nov.",
+    "December": "déc."
+} %}
+
+{% set weekdays = {
+    "Monday": "lun.",
+    "Tuesday": "mar.",
+    "Wednesday": "mer.",
+    "Thursday": "jeu.",
+    "Friday": "ven.",
+    "Saturday": "sam.",
+    "Sunday": "dim."
+} %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ecole Française Internationale de Riyad (EFIR) - PRONOTE</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', path='/schedule/favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/schedule/eleve.css') }}">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap");
+
+        html * {
+            font-family: "Montserrat", Arial, Verdana, Geneva, Helvetica, sans-serif !important;
+            font-size: 0.75rem;
+            line-height: 1.2;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen" style="background-color:#F8F8F8">
+<div class="w-full aspect-[2.25/1] p-2 pr-4">
+    <table class="h-full w-full">
+        <colgroup>
+            <col class="w-12">
+            {% for _ in range(schedule | length) %}
+                <col class="w-[16.6%]">
+            {% endfor %}
+        </colgroup>
+        <tbody>
+        <tr class="h-5">
+            <td></td>
+
+            {% for day, lessons in schedule %}
+                {% set month = months[day.strftime("%B")] %}
+                {% set weekday = weekdays[day.strftime("%A")] %}
+                {% set day = day.strftime("%d") %}
+
+                <td>
+                    <div class="flex items-center justify-center">
+                        <p class="underline">{{ "{} {} {}".format(weekday, day, month) }}</p>
+                    </div>
+                </td>
+
+            {% endfor %}
+        </tr>
+        <tr class="h-full">
+            <td>
+                <div class="relative h-full grid grid-rows-10 mt-1.5 mr-0.5">
+                    <div class="absolute h-full w-full -mt-3.5">
+                        <p class="text-right">{{ hours[0] }}</p>
+                    </div>
+                    {% for hour in hours[1:] %}
+                        <div class="mb-0 mt-auto">
+                            <p class="text-right">{{ hour }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </td>
+
+            {% for day, lessons in schedule %}
+                <td class="p-0 border" style="border-color: #848484">
+                    <div class="flex relative w-full h-full overflow-hidden">
+                        {% if lessons %}
+                            <table class="w-full h-full">
+                                <tbody class="divide-y divide-[#848484]">
+                                {% set past_lesson = namespace(end=0) %}
+                                {% for lesson in lessons %}
+                                    {% for _ in range((lesson | rank)["start"] - past_lesson.end) %}
+                                        <tr style="background-color: #d9dbdc">
+                                            <td>
+                                                <div class="h-full flex items-center justify-center">
+                                                    <div class="w-5/12" style="border-top: 1px solid #848484"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    {% set past_lesson.end = (lesson | rank)["end"] %}
+                                    <tr style="background-color: {{ lesson["background_color"] }}">
+                                        <td class="pl-1" height="{{ (lesson | rank)["duration"] * 10 }}%">
+                                            <div class="h-full flex flex-col items-center bg-gray-300/50">
+                                                <div class="flex items-center justify-center w-full bg-white font-bold text-[11px]">
+                                                    {% if lesson["status"] | lower in ("prof. absent", "déplacement séance", "cours annulé") %}
+                                                        <p style="color: red">{{ lesson["status"] }}</p>
+                                                    {% elif lesson["status"] %}
+                                                        <p style="color: blue">{{ lesson["status"] }}</p>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="w-full h-full flex flex-col items-center justify-center">
+                                                    <div class="uppercase">{{ lesson["subject"] }}</div>
+                                                    {% set max_teachers = 2 * (lesson | rank)["duration"] %}
+                                                    {% if lesson["teachers"] | length > max_teachers  %}
+                                                        {% for teacher in lesson["teachers"][:max_teachers - 1] %}
+                                                            <div class="uppercase">{{ teacher }}</div>
+                                                        {% endfor %}
+                                                        <div>{{ ", ".join(lesson["teachers"][max_teachers - 1:]) }}</div>
+                                                    {% else %}
+                                                        {% for teacher in lesson["teachers"] %}
+                                                            <div class="uppercase">{{ teacher }}</div>
+                                                        {% endfor %}
+                                                    {% endif %}
+
+                                                    <div>{{ ", ".join(lesson["group_names"]) }}</div>
+                                                    <div>{{ ", ".join(lesson["classrooms"]) }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                {% for _ in range(10 - (lessons[-1] | rank)["end"]) %}
+                                    <tr style="background-color: #d9dbdc">
+                                        <td height="10%">
+                                            <div class="h-full flex items-center justify-center">
+                                                <div class="w-5/12" style="border-top: 1px solid #848484"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <table class="w-full h-full">
+                                <tbody class="divide-y divide-[#848484]">
+                                {% for i in range(10) %}
+                                    {% set line_color = lines.get(i) %}
+                                    <tr style="background-color: #d9dbdc">
+                                        <td class="relative" height="10%">
+                                            <div class="h-full flex flex-col">
+                                                <div class="h-full flex items-center justify-center">
+                                                    <div class="w-5/12" style="border-top: 1px solid #848484"></div>
+                                                </div>
+                                            </div>
+                                            {% if line_color %}
+                                                <div class="absolute w-full opacity-50"
+                                                     style="border-bottom: 3px solid {{ line_color }}"></div>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+                        {% if (not lessons and loop.index != schedule | length) or (loop.index == schedule | length and (not schedule[-2][1] or schedule[-1][0].month == 7)) %}
+                            <div class="absolute w-full h-[105%] grid grid-rows-3">
+                                {% for _ in range(3) %}
+                                    <div class="flex items-center justify-center w-full h-full opacity-50">
+                                        <p class="font-semibold"
+                                           style="color: #a6a6a6; transform: scale(9.7) rotate(-45deg)">
+                                            Férié
+                                        </p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </td>
+            {% endfor %}
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
