@@ -41,12 +41,17 @@ templates.env.filters["rank"] = rank
 
 @router.put("", status_code=status.HTTP_200_OK, response_class=Response)
 def refresh_schedules(
-        date_from: str, date_to: str,
+        date_from: str, date_to: str, backup: bool = False,
         db: firestore.Client = Depends(get_db), pronote: pronotepy.Client = Depends(get_pronote)
 ) -> Any:
     """Refresh the schedule from Pronote. The dates should be in the format of YYYY-MM-DD."""
     user_ref = db.collection("users").document(pronote.username)
-    schedule_ref = user_ref.collection("schedule")
+    if backup:
+        schedule_ref = user_ref.collection("backup").document(config.backup_years).collection("schedule")
+        log.info(f"Refreshing backup schedule from {date_from} to {date_to}")
+    else:
+        schedule_ref = user_ref.collection("schedule")
+        log.info(f"Refreshing schedule from {date_from} to {date_to}")
 
     # Get the schedule from Pronote starting from `date_from` and ending at `date_to`.
     # We should first convert the dates to datetime objects.

@@ -39,6 +39,8 @@ class Config(BaseSettings):
     day_end: str = "17:30"
     lesson_duration: int = 55  # In minutes.
 
+    backup_years: str = "2021-2022"
+
     class Config:
         """The Pydantic settings configuration."""
 
