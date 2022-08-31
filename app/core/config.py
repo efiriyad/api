@@ -4,7 +4,7 @@ from pydantic import BaseSettings
 class API(BaseSettings):
     """The API settings."""
 
-    name: str = "FastAPI"
+    name: str = "Efiriyad"
     endpoint: str = "/api/v1"
 
     host: str = "0.0.0.0"
@@ -67,4 +67,9 @@ class Global(BaseSettings):
 
 
 settings = Global()
+
+# Replace /n with real new lines (For fly.io environments).
+settings.firebase.project_id = settings.firebase.project_id.replace("\\n", "\n").replace("\\t", "\t")
+settings.firebase.private_key = settings.firebase.private_key.replace("\\n", "\n").replace("\\t", "\t")
+settings.firebase.client_email = settings.firebase.client_email.replace("\\n", "\n").replace("\\t", "\t")
 config = Config()
