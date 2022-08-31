@@ -18,6 +18,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Deploy DockerImage using flyctl
+      - name: Setup flyctl
         uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy DockerImage using flyctl
         run: flyctl deploy --local-only
