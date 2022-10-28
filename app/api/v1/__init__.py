@@ -1,5 +1,8 @@
-from app.api.v1 import products
+from app.api.v1 import client, grades, schedule
 from fastapi import APIRouter
 
 api_router = APIRouter()
-api_router.include_router(products.router, prefix="/products", tags=["products"])
+
+api_router.include_router(client.router, prefix="/client", tags=["client"])
+api_router.include_router(grades.router, prefix="/grades", tags=["grades"])
+api_router.include_router(schedule.router, prefix="/schedule", tags=["schedule"])

@@ -1,2 +1,2 @@
-from app.schemas.product import (ProductBase, ProductCreate, ProductResponse,
-                                 ProductUpdate)
+from app.schemas.schedule import Lesson, Schedule
+from app.schemas.client import *

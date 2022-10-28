@@ -1,4 +1,38 @@
-# [Api](./README.md) &middot; [![GitHub license]](./LICENSE) ![Test Action]
+# [Efiriyad API](./README.md) &middot; [![GitHub license]](./LICENSE) ![Test Action]
+
+#### Spécialités
+
+- HGGSP #hggsp
+- HLP #hlp
+- Anglais OP #english-op
+- ~~Mathématiques~~ #math
+- ~~Physique-Chimie~~ #physics
+- ~~SVT~~ #svt
+- ~~SES~~ (Ziad) #ses
+
+#### Cours obligatoires
+
+- ~~Francais~~ #french
+- ~~Histoire-Géo~~ #hist-geo
+- ~~EMC~~ #emc
+- ~~Enseignement scientifique~~ #science
+- ~~Anglais~~ #english
+- Sport #sport
+- ~~LVB~~ #lvb
+- LVC #lvc
+
+#### LVB
+
+- ~~Allemand~~ #german
+- ~~Arabe~~ (Ziad) #arabic
+- ~~Espagnol~~ (Ziad) #spanish
+
+#### LVC
+
+- ~~EPS OP~~ #sport-op
+- Arts-Plastiques #art
+
+-----------------------------
 
 <!-- Table of Contents -->
 

@@ -9,3 +9,5 @@ def pytest_load_initial_conftests() -> None:
     os.environ["FIREBASE_PROJECT_ID"] = ""
     os.environ["FIREBASE_PRIVATE_KEY"] = ""
     os.environ["FIREBASE_CLIENT_EMAIL"] = ""
+
+    os.environ["PASSWORD_KEY"] = ""
