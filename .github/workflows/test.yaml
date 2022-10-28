@@ -15,9 +15,6 @@ jobs:
       PIP_NO_CACHE_DIR: false
       PIP_USER: 1
 
-      # Disable Poetry virtualenv creation
-      POETRY_VIRTUALENVS_CREATE: false
-
       # Specify explicit paths for python dependencies and the pre-commit
       # environment so we know which directories to cache
       PYTHONUSERBASE: ${{ github.workspace }}/.cache/py-user-base
