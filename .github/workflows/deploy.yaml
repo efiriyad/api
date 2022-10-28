@@ -23,3 +23,5 @@ jobs:
 
       - name: Deploy DockerImage using flyctl
         run: flyctl deploy --local-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
