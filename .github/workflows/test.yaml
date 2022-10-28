@@ -15,9 +15,6 @@ jobs:
       PIP_NO_CACHE_DIR: false
       PIP_USER: 1
 
-      # Disable Poetry virtualenv creation
-      POETRY_VIRTUALENVS_CREATE: false
-
       # Specify explicit paths for python dependencies and the pre-commit
       # environment so we know which directories to cache
       PYTHONUSERBASE: ${{ github.workspace }}/.cache/py-user-base
@@ -35,6 +32,11 @@ jobs:
         with:
           python-version: 3.9
 
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: false
+
       # Only when the context is exactly the same, we will restore the cache.
       - name: Python dependencies caching
         uses: actions/cache@v2
@@ -48,9 +50,7 @@ jobs:
       # Install our dependencies if we did not restore a dependency cache.
       - name: Install dependencies using poetry
         if: steps.python_cache.outputs.cache-hit != 'true'
-        run: |
-          pip install poetry
-          poetry install --no-interaction
+        run: poetry install --no-interaction
 
       # Only when the context is exactly the same, we will restore the cache.
       - name: Pre-commit environment caching
