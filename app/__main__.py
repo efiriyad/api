@@ -1,11 +1,21 @@
 import uvicorn
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.api.v1 import api_router
 from app.core import settings
 
 app = FastAPI(title=settings.api.name)
+
+# Allow any website to request this api.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Mount the static files directory and the routers.
 app.mount("/static", StaticFiles(directory="app/static"), name="static")

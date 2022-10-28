@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 from typing import Any, Union
 
@@ -6,6 +7,8 @@ from google.cloud import firestore
 from pronotepy.dataClasses import Lesson
 
 from app.core import config
+
+log = logging.getLogger(__name__)
 
 
 class Schedule:
@@ -70,8 +73,12 @@ class WeekSchedule:
         if 1 < len(schedule) < 6:
             # Fill the week days with its corresponding schedule if it exists.
             for day in schedule:
-                weekday = next(d for d in weekdays if d["date"].date() == day["date"].date())
-                weekday["lessons"] = day["lessons"]
+                try:
+                    weekday = next(d for d in weekdays if d["date"].date() == day["date"].date())
+                    weekday["lessons"] = day["lessons"]
+                except StopIteration:
+                    log.error(f"{day['date']} was not found in the schedule")
+                    break
 
         # Remove Friday from the weekdays list.
         weekdays.pop(5)
