@@ -10,7 +10,7 @@ class ClientCreate(BaseModel):
 class Client(BaseModel):
     """The client response."""
 
-    profile: dict[str, dict] = {
+    profile: dict[str, str] = {
         "name": "",
         "picture": "https://cdn.efiriyad.tech/images/profile/default.png"
     }
