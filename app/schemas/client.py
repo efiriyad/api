@@ -10,7 +10,11 @@ class ClientCreate(BaseModel):
 class Client(BaseModel):
     """The client response."""
 
-    name: str = ""
+    profile: dict[str, dict] = {
+        "name": "",
+        "picture": "https://cdn.efiriyad.tech/images/profile/default.png"
+    }
+
     notifications: dict[str, dict] = {
         "email": {"enabled": False, "address": ""},
         "push": {"enabled": False, "token": ""},
