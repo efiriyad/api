@@ -15,7 +15,10 @@ router = APIRouter()
 def create_client(db: firestore.Client = Depends(get_db)) -> Any:
     """Create a new client and return its UUID."""
     _, client_ref = db.collection("clients").add({
-        "name": "",
+        "profile": {
+            "name": "",
+            "picture": "https://cdn.efiriyad.tech/images/profile/default.png"
+        },
         "notifications": {
             "email": {"enabled": False, "address": ""},
             "push": {"enabled": False, "token": ""},
