@@ -17,6 +17,18 @@ class API(BaseSettings):
         env_prefix = "API_"
 
 
+class Azure(BaseSettings):
+    """The Firebase settings."""
+
+    connection_string: str
+
+    class Config:
+        """The Pydantic settings configuration."""
+
+        env_file = ".env"
+        env_prefix = "AZURE_"
+
+
 class FireBase(BaseSettings):
     """The Firebase settings."""
 
@@ -52,6 +64,7 @@ class Global(BaseSettings):
     """The app settings."""
 
     api: API = API()
+    azure: Azure = Azure()
     firebase: FireBase = FireBase()
 
     # This key will be used to decrypt the user passwords stored in the

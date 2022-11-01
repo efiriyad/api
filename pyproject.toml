@@ -19,6 +19,10 @@ requests = "^2.26.0"
 taskipy = "^1.10.2"
 uvicorn = "^0.15.0"
 cryptography = "^37.0.4"
+python-multipart = "^0.0.5"
+azure-storage-blob = "^12.14.1"
+azure-identity = "^1.11.0"
+pillow = "^9.3.0"
 
 [tool.poetry.dev-dependencies]
 python-dotenv = "^0.19.2"
