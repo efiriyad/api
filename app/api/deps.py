@@ -2,8 +2,14 @@ from typing import Generator
 
 from pronotepy.exceptions import ENTLoginError
 
+from app.azure.session import azure
 from app.firebase.session import db
 from app.pronote.session import client as pronote_client
+
+
+def get_azure() -> Generator:
+    """Returns a azure blob instance."""
+    yield azure
 
 
 def get_db() -> Generator:

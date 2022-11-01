@@ -19,3 +19,9 @@ class Client(BaseModel):
         "email": {"enabled": False, "address": ""},
         "push": {"enabled": False, "token": ""},
     }
+
+
+class ClientPicture(BaseModel):
+    """The client response."""
+
+    url: str

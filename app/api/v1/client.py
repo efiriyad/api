@@ -1,11 +1,15 @@
 import logging
+import uuid
+from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from azure.storage.blob import BlobServiceClient
+from fastapi import APIRouter, Depends, HTTPException, Response, UploadFile, status
 from google.cloud import firestore
 
-from app.api.deps import get_db
-from app.schemas import Client, ClientCreate
+from app.api.deps import get_azure, get_db
+from app.schemas import Client, ClientCreate, ClientPicture
+from app.utils.image import resize_image
 
 log = logging.getLogger(__name__)
 router = APIRouter()
@@ -57,3 +61,19 @@ def update_client(token: str, data: Client, db: firestore.Client = Depends(get_d
         status_code=status.HTTP_404_NOT_FOUND,
         detail="The client with this token does not exist in the system.",
     )
+
+
+@router.post("/picture", response_model=ClientPicture)
+def upload_client_picture(file: UploadFile, azure: BlobServiceClient = Depends(get_azure)) -> Any:
+    """Return a URL to the uploaded picture."""
+    filename, ext = uuid.uuid4().hex, Path(file.filename).suffix
+
+    # Set up the blob with a randomly generated name.
+    container = azure.get_container_client("images")
+    blob = container.get_blob_client(f"profile/{filename}{ext}")
+
+    # Resize the image to 64x64 and upload it to Azure.
+    image = resize_image(file.file, (64, 64))
+    blob.upload_blob(image)
+
+    return {"url": blob.url}
