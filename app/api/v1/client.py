@@ -1,6 +1,5 @@
 import logging
 import uuid
-from pathlib import Path
 from typing import Any
 
 from azure.storage.blob import BlobServiceClient
@@ -8,6 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response, UploadFile, sta
 from google.cloud import firestore
 
 from app.api.deps import get_azure, get_db
+from app.core import settings
 from app.schemas import Client, ClientCreate, ClientPicture
 from app.utils.image import resize_image
 
@@ -21,7 +21,7 @@ def create_client(db: firestore.Client = Depends(get_db)) -> Any:
     _, client_ref = db.collection("clients").add({
         "profile": {
             "name": "",
-            "picture": "https://cdn.efiriyad.tech/images/profile/default.png"
+            "picture": f"{settings.site.cdn}/images/profile/default.png"
         },
         "notifications": {
             "email": {"enabled": False, "address": ""},
@@ -66,14 +66,13 @@ def update_client(token: str, data: Client, db: firestore.Client = Depends(get_d
 @router.post("/picture", response_model=ClientPicture)
 def upload_client_picture(file: UploadFile, azure: BlobServiceClient = Depends(get_azure)) -> Any:
     """Return a URL to the uploaded picture."""
-    filename, ext = uuid.uuid4().hex, Path(file.filename).suffix
-
-    # Set up the blob with a randomly generated name.
     container = azure.get_container_client("images")
-    blob = container.get_blob_client(f"profile/{filename}{ext}")
+    blob = container.get_blob_client(f"profile/{uuid.uuid4()}.png")
 
     # Resize the image to 64x64 and upload it to Azure.
-    image = resize_image(file.file, (64, 64))
+    image = resize_image(file.file, (64, 64), ext="PNG")
     blob.upload_blob(image)
 
-    return {"url": blob.url}
+    # Replace the url domain with our cdn.
+    url = blob.url.replace(settings.site.origin_cdn, settings.site.cdn)
+    return {"url": url}

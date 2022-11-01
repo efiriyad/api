@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
+from app.core import settings
+
 
 class ClientCreate(BaseModel):
     """The client response."""
@@ -12,7 +14,7 @@ class Client(BaseModel):
 
     profile: dict[str, str] = {
         "name": "",
-        "picture": "https://cdn.efiriyad.tech/images/profile/default.png"
+        "picture": f"{settings.site.cdn}/images/profile/default.png"
     }
 
     notifications: dict[str, dict] = {

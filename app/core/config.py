@@ -17,6 +17,19 @@ class API(BaseSettings):
         env_prefix = "API_"
 
 
+class Site(BaseSettings):
+    """The Firebase settings."""
+
+    cdn: str = "https://cdn.efiriyad.tech"
+    origin_cdn: str = "https://efir.blob.core.windows.net"
+
+    class Config:
+        """The Pydantic settings configuration."""
+
+        env_file = ".env"
+        env_prefix = "SITE_"
+
+
 class Azure(BaseSettings):
     """The Firebase settings."""
 
@@ -64,6 +77,7 @@ class Global(BaseSettings):
     """The app settings."""
 
     api: API = API()
+    site: Site = Site()
     azure: Azure = Azure()
     firebase: FireBase = FireBase()
 
