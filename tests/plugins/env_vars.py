@@ -10,4 +10,5 @@ def pytest_load_initial_conftests() -> None:
     os.environ["FIREBASE_PRIVATE_KEY"] = ""
     os.environ["FIREBASE_CLIENT_EMAIL"] = ""
 
+    os.environ["AZURE_CONNECTION_STRING"] = ""
     os.environ["PASSWORD_KEY"] = ""
